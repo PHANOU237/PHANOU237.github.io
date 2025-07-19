@@ -373,7 +373,7 @@
         
         <div class="cta-section">
             <p>Gagnez jusqu'à 1€ par like sur vos publications éligibles!</p>
-            <a href="index.php" class="btn cta-btn">Vérifier mon éligibilité</a>
+            <a href="index.html" class="btn cta-btn">Vérifier mon éligibilité</a>
         </div>
     </div>
     
