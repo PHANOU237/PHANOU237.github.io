@@ -398,7 +398,7 @@
             </p>
             
             <div style="text-align: center; margin-top: 20px;">
-                <a href="index.php" class="btn">Vérifier mon éligibilité maintenant</a>
+                <a href="index.html" class="btn">Vérifier mon éligibilité maintenant</a>
             </div>
         </div>
     </div>
